@@ -198,7 +198,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
               <TableCell className="text-right pr-2">
                 {/* Mobile View: 3-dot menu with state management */}
                 <div className="md:hidden">
-                  <DropdownMenu onOpenChange={(open) => !open && showMainMenu(report.id)}>
+                  <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         <MoreVertical className="h-4 w-4" />
@@ -222,7 +222,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                         </>
                       ) : (
                         <>
-                          <DropdownMenuItem onClick={() => showDownloadMenu(report.id)}>
+                          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); showDownloadMenu(report.id); }}>
                             <Download className="mr-2 h-4 w-4" />
                             <span>Download Report</span>
                           </DropdownMenuItem>
