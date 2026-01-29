@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Download, FileUp, Link as LinkIcon, FileText as DefaultIcon, FileType, FileText, User, Trash2 } from 'lucide-react';
+import { Download, FileUp, Link as LinkIcon, FileText as DefaultIcon, FileType, FileText, User, Trash2, MoreVertical } from 'lucide-react';
 import { generateScanReportDocx, generateScanReportPdf } from "@/lib/report-generator";
 import {
   Tooltip,
@@ -115,7 +115,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
             {isAdminView && <TableHead className="hidden lg:table-cell">User</TableHead>}
             <TableHead className="hidden sm:table-cell">Status</TableHead>
             <TableHead className="hidden md:table-cell">Threat Level</TableHead>
-            <TableHead className="text-right min-w-[120px] pr-4">Actions</TableHead>
+            <TableHead className="text-right w-[80px] pr-2">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -183,13 +183,54 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                   {report.threatLabel || 'N/A'}
                 </Badge>
               </TableCell>
-              <TableCell className="text-right pr-4">
-                <div className="flex gap-1 justify-end items-center flex-shrink-0 min-w-[100px]">
+              <TableCell className="text-right pr-2">
+                {/* Mobile View: 3-dot menu */}
+                <div className="md:hidden">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Download className="mr-2 h-4 w-4" />
+                            <span>Download Report</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="left" align="start" className="w-44">
+                          <DropdownMenuItem onClick={() => handleDownloadDocx(report)}>
+                            <FileText className="mr-2 h-4 w-4" />
+                            <span>As DOCX</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleDownloadPdf(report)}>
+                            <FileType className="mr-2 h-4 w-4" />
+                            <span>As PDF</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      {onDeleteReport && (
+                        <DropdownMenuItem 
+                          onClick={() => onDeleteReport(report)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Delete Report</span>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Desktop View: Separate buttons */}
+                <div className="hidden md:flex gap-1 justify-end items-center">
                   <DropdownMenu>
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="hover:text-primary flex-shrink-0">
+                                <Button variant="ghost" size="icon" className="hover:text-primary flex-shrink-0 h-8 w-8">
                                     <Download className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
@@ -211,7 +252,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                   {onDeleteReport && (
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="hover:text-destructive flex-shrink-0" onClick={() => onDeleteReport(report)}>
+                            <Button variant="ghost" size="icon" className="hover:text-destructive flex-shrink-0 h-8 w-8" onClick={() => onDeleteReport(report)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>
