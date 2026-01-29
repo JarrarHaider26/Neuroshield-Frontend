@@ -116,23 +116,45 @@ export default function FileScanPage() {
         const apiTime = Date.now() - apiStartTime;
         console.log('[FileScanPage] API response received in', apiTime, 'ms');
 
-        let result: ScanFileOutput = await response.json();
+        let result: any = await response.json();
         
         // Transform backend response to match expected format
         if (useDirectBackend && result) {
-          // Backend returns different format, normalize it
-          result = {
-            ...result,
+          console.log('[FileScanPage] Transforming backend response:', result);
+          
+          // Backend returns: { verdict, confidence, threat_level, md5, sha1, sha256, scan_time }
+          // Need to transform to match ScanFileOutput format
+          const transformedResult: ScanFileOutput = {
             status: result.error ? 'error' : 'completed',
-            scanDate: result.scanDate || Math.floor(Date.now() / 1000),
-            fileInfo: result.fileInfo || {
+            threatLabel: result.threat_level || result.verdict || 'Unknown',
+            scanDate: Math.floor(Date.now() / 1000),
+            fileInfo: {
               name: file.name,
               size: file.size,
               md5: result.md5,
               sha1: result.sha1,
               sha256: result.sha256,
-            }
+            },
+            stats: {
+              malicious: result.verdict?.toLowerCase().includes('malicious') ? 1 : 0,
+              suspicious: result.verdict?.toLowerCase().includes('suspicious') ? 1 : 0,
+              harmless: result.verdict?.toLowerCase().includes('clean') || result.verdict?.toLowerCase().includes('benign') ? 1 : 0,
+              undetected: 0,
+            },
+            results: {
+              'NeuroShield_AI_Model': {
+                category: 'type-unsupported',
+                engine_name: 'NeuroShield_Analysis_Engine',
+                engine_version: '1.0',
+                result: `${result.verdict} (${result.confidence}%)`,
+                method: 'machine_learning',
+                engine_update: new Date().toISOString().split('T')[0].replace(/-/g, ''),
+              }
+            },
+            error: result.error,
           };
+          
+          result = transformedResult;
         }
         
         const totalTime = Date.now() - startTime;
