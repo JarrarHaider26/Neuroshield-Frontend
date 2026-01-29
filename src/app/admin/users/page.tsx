@@ -278,68 +278,70 @@ export default function AdminUsersPage() {
                 </div>
               ) : (
                 <ScrollArea className="h-[600px] w-full rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>User</TableHead>
-                        <TableHead className="hidden md:table-cell">Status</TableHead>
-                        <TableHead className="hidden lg:table-cell">Joined Date</TableHead>
-                        <TableHead className="hidden lg:table-cell">Last Login</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10 border-2 border-primary/50">
-                                <AvatarImage src={user.profilePicUrl} alt={user.displayName} />
-                                <AvatarFallback>{user.displayName.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div className="grid gap-0.5">
-                                <p className="font-medium text-foreground">{user.displayName}</p>
-                                <p className="text-xs text-muted-foreground">{user.email}</p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <Badge variant={user.role === 'admin' ? 'destructive' : 'secondary'}>
-                              {user.role === 'admin' ? 'Admin' : 'User'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground">
-                            {user.createdAt ? user.createdAt.toLocaleDateString() : 'N/A'}
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground">
-                            {user.lastLogin ? user.lastLogin.toLocaleString() : 'Never'}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" disabled={user.id === adminUser?.uid}>
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleOpenEditDialog(user)}>
-                                  <Pencil className="mr-2 h-4 w-4" />
-                                  <span>Edit</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleOpenDeleteDialog(user)}
-                                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  <span>Delete</span>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                  <div className="min-w-full overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="min-w-[200px]">User</TableHead>
+                          <TableHead className="hidden md:table-cell">Status</TableHead>
+                          <TableHead className="hidden lg:table-cell">Joined Date</TableHead>
+                          <TableHead className="hidden lg:table-cell">Last Login</TableHead>
+                          <TableHead className="text-center w-[60px] sticky right-0 bg-background">Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredUsers.map((user) => (
+                          <TableRow key={user.id}>
+                            <TableCell className="min-w-[200px]">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10 border-2 border-primary/50">
+                                  <AvatarImage src={user.profilePicUrl} alt={user.displayName} />
+                                  <AvatarFallback>{user.displayName.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="grid gap-0.5">
+                                  <p className="font-medium text-foreground">{user.displayName}</p>
+                                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              <Badge variant={user.role === 'admin' ? 'destructive' : 'secondary'}>
+                                {user.role === 'admin' ? 'Admin' : 'User'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="hidden lg:table-cell text-muted-foreground">
+                              {user.createdAt ? user.createdAt.toLocaleDateString() : 'N/A'}
+                            </TableCell>
+                            <TableCell className="hidden lg:table-cell text-muted-foreground">
+                              {user.lastLogin ? user.lastLogin.toLocaleString() : 'Never'}
+                            </TableCell>
+                            <TableCell className="text-center w-[60px] sticky right-0 bg-background">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8" disabled={user.id === adminUser?.uid}>
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => handleOpenEditDialog(user)}>
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    <span>Edit</span>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => handleOpenDeleteDialog(user)}
+                                    className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    <span>Delete</span>
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </ScrollArea>
               )}
             </CardContent>
