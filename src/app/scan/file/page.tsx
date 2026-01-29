@@ -3,7 +3,7 @@
 import { AppShell } from '@/components/layout/AppShell';
 import { FileUploader } from '@/components/scan/FileUploader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, CheckCircle, Download, Loader2, ShieldCheck, Info, FileDown, AlertCircle as AlertIcon, FileText, FileType } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Loader2, ShieldCheck, Info, FileDown, AlertCircle as AlertIcon, FileText, FileType } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback } from 'react';
 import type { ScanFileOutput } from '@/ai/flows/scan-file-flow';
@@ -44,8 +44,8 @@ export default function FileScanPage() {
         scanDate: result.scanDate || Math.floor(Date.now() / 1000),
         status: result.status,
         threatLabel: result.threatLabel || 'N/A',
-        analysisId: result.analysisId,
-        permalink: result.permalink,
+        analysisId: result.analysisId || null,
+        permalink: result.permalink || null,
         reportData: { ...result },
         createdAt: serverTimestamp(),
       };
@@ -140,15 +140,14 @@ export default function FileScanPage() {
               suspicious: result.verdict?.toLowerCase().includes('suspicious') ? 1 : 0,
               harmless: result.verdict?.toLowerCase().includes('clean') || result.verdict?.toLowerCase().includes('benign') ? 1 : 0,
               undetected: 0,
+              timeout: 0,
             },
             results: {
               'NeuroShield_AI_Model': {
                 category: 'type-unsupported',
                 engine_name: 'NeuroShield_Analysis_Engine',
-                engine_version: '1.0',
                 result: `${result.verdict} (${result.confidence}%)`,
                 method: 'machine_learning',
-                engine_update: new Date().toISOString().split('T')[0].replace(/-/g, ''),
               }
             },
             error: result.error,
