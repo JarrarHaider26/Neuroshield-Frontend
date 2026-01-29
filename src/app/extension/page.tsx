@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Globe, Shield, Zap, Lock, CheckCircle, FileDown, Link2 } from 'lucide-react';
 
 export default function ExtensionPage() {
-  const EXTENSION_DOWNLOAD_LINK = 'https://drive.google.com/uc?export=download&id=112Q9G7uRsp-fyZD6h6fqASqpA8_Gpnqs';
+  const EXTENSION_DOWNLOAD_LINK = 'https://drive.google.com/uc?export=download&id=1L20z_i3PF-PuL2WnQ2Xsv7_su3-_eLvA';
 
   return (
     <AppShell>
