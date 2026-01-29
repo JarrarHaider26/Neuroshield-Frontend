@@ -114,8 +114,8 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
             <TableHead>Target</TableHead>
             {isAdminView && <TableHead className="hidden lg:table-cell">User</TableHead>}
             <TableHead className="hidden sm:table-cell">Status</TableHead>
-            <TableHead>Threat Level</TableHead>
-            <TableHead className="text-right w-[100px]">Actions</TableHead>
+            <TableHead className="hidden md:table-cell">Threat Level</TableHead>
+            <TableHead className="text-right min-w-[100px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -169,7 +169,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                   {report.status}
                 </Badge>
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <Badge variant={getThreatLevelBadgeVariant(report.threatLabel)}
                       className={
                           !report.threatLabel || report.threatLabel.toLowerCase() === 'unknown' ? 'opacity-70' :
@@ -184,19 +184,19 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex gap-1 justify-end items-center">
+                <div className="flex gap-1 justify-end items-center flex-shrink-0">
                   <DropdownMenu>
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="hover:text-primary">
+                                <Button variant="ghost" size="icon" className="hover:text-primary flex-shrink-0">
                                     <Download className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                         </TooltipTrigger>
                         <TooltipContent><p>Download Report</p></TooltipContent>
                     </Tooltip>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleDownloadDocx(report)}>
                             <FileText className="mr-2 h-4 w-4" />
                             <span>Download as DOCX</span>
@@ -211,7 +211,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                   {onDeleteReport && (
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="hover:text-destructive" onClick={() => onDeleteReport(report)}>
+                            <Button variant="ghost" size="icon" className="hover:text-destructive flex-shrink-0" onClick={() => onDeleteReport(report)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>
