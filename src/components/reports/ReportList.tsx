@@ -1,6 +1,7 @@
 
 'use client';
 
+import React from 'react';
 import type { ScanFileOutput } from "@/ai/flows/scan-file-flow";
 import type { ScanUrlOutput } from "@/ai/flows/scan-url-flow";
 import {
@@ -15,7 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Download, FileUp, Link as LinkIcon, FileText as DefaultIcon, FileType, FileText, User, Trash2, MoreVertical } from 'lucide-react';
+import { Download, FileUp, Link as LinkIcon, FileText as DefaultIcon, FileType, FileText, User, Trash2, MoreVertical, ChevronLeft } from 'lucide-react';
 import { generateScanReportDocx, generateScanReportPdf } from "@/lib/report-generator";
 import {
   Tooltip,
@@ -84,13 +85,24 @@ const getStatusBadgeVariant = (status: string) => {
 }
 
 export function ReportList({ reports, userMap, isAdminView = false, onDeleteReport }: ReportListProps) {
+  const [mobileMenuState, setMobileMenuState] = React.useState<{ [key: string]: 'main' | 'download' }>({});
 
   const handleDownloadDocx = async (report: SavedReport) => {
     await generateScanReportDocx(report.reportData, report.scanType);
+    setMobileMenuState(prev => ({ ...prev, [report.id]: 'main' }));
   };
   
   const handleDownloadPdf = async (report: SavedReport) => {
     await generateScanReportPdf(report.reportData, report.scanType);
+    setMobileMenuState(prev => ({ ...prev, [report.id]: 'main' }));
+  };
+
+  const showDownloadMenu = (reportId: string) => {
+    setMobileMenuState(prev => ({ ...prev, [reportId]: 'download' }));
+  };
+
+  const showMainMenu = (reportId: string) => {
+    setMobileMenuState(prev => ({ ...prev, [reportId]: 'main' }));
   };
 
   if (reports.length === 0) {
@@ -184,41 +196,46 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                 </Badge>
               </TableCell>
               <TableCell className="text-right pr-2">
-                {/* Mobile View: 3-dot menu */}
+                {/* Mobile View: 3-dot menu with state management */}
                 <div className="md:hidden">
-                  <DropdownMenu>
+                  <DropdownMenu onOpenChange={(open) => !open && showMainMenu(report.id)}>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                            <Download className="mr-2 h-4 w-4" />
-                            <span>Download Report</span>
+                      {mobileMenuState[report.id] === 'download' ? (
+                        <>
+                          <DropdownMenuItem onClick={() => showMainMenu(report.id)} className="text-muted-foreground">
+                            <ChevronLeft className="mr-2 h-4 w-4" />
+                            <span>Back</span>
                           </DropdownMenuItem>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="left" align="start" className="w-44">
                           <DropdownMenuItem onClick={() => handleDownloadDocx(report)}>
                             <FileText className="mr-2 h-4 w-4" />
-                            <span>As DOCX</span>
+                            <span>Download as DOCX</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleDownloadPdf(report)}>
                             <FileType className="mr-2 h-4 w-4" />
-                            <span>As PDF</span>
+                            <span>Download as PDF</span>
                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      {onDeleteReport && (
-                        <DropdownMenuItem 
-                          onClick={() => onDeleteReport(report)}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete Report</span>
-                        </DropdownMenuItem>
+                        </>
+                      ) : (
+                        <>
+                          <DropdownMenuItem onClick={() => showDownloadMenu(report.id)}>
+                            <Download className="mr-2 h-4 w-4" />
+                            <span>Download Report</span>
+                          </DropdownMenuItem>
+                          {onDeleteReport && (
+                            <DropdownMenuItem 
+                              onClick={() => onDeleteReport(report)}
+                              className="text-destructive focus:text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span>Delete Report</span>
+                            </DropdownMenuItem>
+                          )}
+                        </>
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
