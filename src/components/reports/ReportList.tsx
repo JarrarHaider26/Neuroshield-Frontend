@@ -115,7 +115,7 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
             {isAdminView && <TableHead className="hidden lg:table-cell">User</TableHead>}
             <TableHead className="hidden sm:table-cell">Status</TableHead>
             <TableHead className="hidden md:table-cell">Threat Level</TableHead>
-            <TableHead className="text-right min-w-[100px]">Actions</TableHead>
+            <TableHead className="text-right min-w-[120px] pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -183,8 +183,8 @@ export function ReportList({ reports, userMap, isAdminView = false, onDeleteRepo
                   {report.threatLabel || 'N/A'}
                 </Badge>
               </TableCell>
-              <TableCell className="text-right">
-                <div className="flex gap-1 justify-end items-center flex-shrink-0">
+              <TableCell className="text-right pr-4">
+                <div className="flex gap-1 justify-end items-center flex-shrink-0 min-w-[100px]">
                   <DropdownMenu>
                     <Tooltip>
                         <TooltipTrigger asChild>
