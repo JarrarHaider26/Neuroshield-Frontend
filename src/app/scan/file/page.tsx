@@ -116,7 +116,25 @@ export default function FileScanPage() {
         const apiTime = Date.now() - apiStartTime;
         console.log('[FileScanPage] API response received in', apiTime, 'ms');
 
-        const result: ScanFileOutput = await response.json();
+        let result: ScanFileOutput = await response.json();
+        
+        // Transform backend response to match expected format
+        if (useDirectBackend && result) {
+          // Backend returns different format, normalize it
+          result = {
+            ...result,
+            status: result.error ? 'error' : 'completed',
+            scanDate: result.scanDate || Math.floor(Date.now() / 1000),
+            fileInfo: result.fileInfo || {
+              name: file.name,
+              size: file.size,
+              md5: result.md5,
+              sha1: result.sha1,
+              sha256: result.sha256,
+            }
+          };
+        }
+        
         const totalTime = Date.now() - startTime;
         console.log('[FileScanPage] Received result from API:', result.status, result.threatLabel);
         console.log('[FileScanPage] Total scan time:', totalTime, 'ms');
