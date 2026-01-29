@@ -73,62 +73,105 @@ export default function FileScanPage() {
       console.log('[FileScanPage] Starting file upload process for:', file.name, `(${(file.size / 1024 / 1024).toFixed(2)} MB)`);
       const startTime = Date.now();
       
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async () => {
-        const fileDataUri = reader.result as string;
-        const readTime = Date.now() - startTime;
-        console.log('[FileScanPage] File read completed in', readTime, 'ms');
-        console.log('[FileScanPage] Base64 data size:', fileDataUri.length, 'chars');
-        
-        setScanStatus('scanning');
-        
-        console.log('[FileScanPage] Calling API /api/scan/file with input:', {fileName: file.name});
-        const apiStartTime = Date.now();
+      setScanStatus('scanning');
+      
+      // Send file directly to Render backend for large files
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const backendUrl = process.env.NEXT_PUBLIC_EMBER_API_URL || 'https://neuroshield-backend.onrender.com';
+      console.log('[FileScanPage] Sending file directly to backend:', backendUrl);
+      const apiStartTime = Date.now();
 
-        const response = await fetch('/api/scan/file', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileDataUri, fileName: file.name }),
-        });
-        
-        const apiTime = Date.now() - apiStartTime;
-        console.log('[FileScanPage] API response received in', apiTime, 'ms');
+      const response = await fetch(`${backendUrl}/scan`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const apiTime = Date.now() - apiStartTime;
+      console.log('[FileScanPage] Backend response received in', apiTime, 'ms');
 
-        const result: ScanFileOutput = await response.json();
-        const totalTime = Date.now() - startTime;
-        console.log('[FileScanPage] Received result from API:', result.status, result.threatLabel);
-        console.log('[FileScanPage] Total scan time:', totalTime, 'ms');
+      if (!response.ok) {
+        throw new Error(`Backend returned ${response.status}: ${response.statusText}`);
+      }
 
-        setScanResult(result);
+      const backendResult = await response.json();
+      const totalTime = Date.now() - startTime;
+      console.log('[FileScanPage] Received result from backend:', backendResult);
+      console.log('[FileScanPage] Total scan time:', totalTime, 'ms');
 
-        // Check if scan had an error
-        if (!response.ok || result.status === 'error' || result.error) {
-          setScanStatus('error');
-          const errorMsg = result.error || 'An unexpected error occurred during the scan.';
-          setErrorMessage(errorMsg);
-          
-          // Check if it's a connection error to Python API
-          if (errorMsg.includes('fetch') || errorMsg.includes('NeuroShield API') || errorMsg.includes('localhost:5000')) {
-            setErrorMessage('Cannot connect to NeuroShield scanner. Please ensure the Python API is running on port 5000. Run: python web_scanner.py');
+      // Convert backend result to ScanFileOutput format
+      const isMalicious = backendResult.verdict === 'Malicious';
+      const malwareProb = backendResult.malware_probability || 0;
+      
+      let maliciousCount = 0;
+      let suspiciousCount = 0;
+      let harmlessCount = 1;
+      
+      if (backendResult.threat_severity === 'Critical') {
+        maliciousCount = 8;
+        harmlessCount = 0;
+      } else if (backendResult.threat_severity === 'High') {
+        maliciousCount = 5;
+        harmlessCount = 0;
+      } else if (backendResult.threat_severity === 'Medium') {
+        suspiciousCount = 3;
+        harmlessCount = 0;
+      } else if (backendResult.threat_severity === 'Low') {
+        suspiciousCount = 1;
+        harmlessCount = 0;
+      }
+
+      const result: ScanFileOutput = {
+        analysisId: `ember_${Date.now()}`,
+        status: 'completed',
+        scanDate: Math.floor(Date.now() / 1000),
+        stats: {
+          harmless: harmlessCount,
+          malicious: maliciousCount,
+          suspicious: suspiciousCount,
+          timeout: 0,
+          undetected: 0,
+        },
+        results: {
+          'NeuroShield_AI_Model': {
+            category: isMalicious ? 'malicious' : 'undetected',
+            result: isMalicious 
+              ? `${backendResult.threat_severity} (${(malwareProb * 100).toFixed(1)}%)` 
+              : `Clean (${((1 - malwareProb) * 100).toFixed(1)}%)`,
+            method: 'machine_learning',
+            engine_name: 'NeuroShield_Analysis_Engine',
           }
-        } else {
-          setScanStatus('completed');
-          // Save the report from the client-side after scan completes
-          await saveReport(result, file);
-        }
+        },
+        fileInfo: {
+          name: file.name,
+          size: backendResult.file_size,
+          sha256: backendResult.file_hash,
+        },
+        threatLabel: backendResult.threat_severity === 'None' ? 'Clean' : backendResult.threat_severity,
+        permalink: `data:application/json;base64,${btoa(JSON.stringify(backendResult))}`,
       };
-      reader.onerror = (error) => {
-        console.error('[FileScanPage] Error reading file:', error);
+
+      setScanResult(result);
+
+      // Check if scan had an error
+      if (backendResult.error) {
         setScanStatus('error');
-        setErrorMessage('Failed to read file for upload.');
-      };
+        setErrorMessage(backendResult.error);
+      } else {
+        setScanStatus('completed');
+        // Save the report from the client-side after scan completes
+        await saveReport(result, file);
+      }
     } catch (err: any) {
       console.error('[FileScanPage] File scan error:', err);
       setScanStatus('error');
       let detailedError = 'An unexpected error occurred during scan.';
       if (err.message) {
         detailedError = err.message;
+      }
+      if (detailedError.includes('fetch') || detailedError.includes('Failed to fetch')) {
+        detailedError = 'Cannot connect to NeuroShield backend. Please ensure the backend is running.';
       }
       setErrorMessage(detailedError);
       setScanResult(null);
