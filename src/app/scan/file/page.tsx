@@ -92,14 +92,14 @@ export default function FileScanPage() {
 
         let response;
         if (useDirectBackend) {
-          // Send file directly to Render backend using FormData
-          const backendUrl = process.env.NEXT_PUBLIC_EMBER_API_URL || 'https://neuroshield-backend.onrender.com';
-          console.log('[FileScanPage] Sending to backend:', `${backendUrl}/scan`);
+          // Send file to Vercel proxy endpoint which forwards to Render backend
+          // This ensures consistent response format for all file sizes
+          console.log('[FileScanPage] Using proxy endpoint /api/scan/file-large');
           
           const formData = new FormData();
           formData.append('file', file);
           
-          response = await fetch(`${backendUrl}/scan`, {
+          response = await fetch('/api/scan/file-large', {
             method: 'POST',
             body: formData,
           });
@@ -116,51 +116,7 @@ export default function FileScanPage() {
         const apiTime = Date.now() - apiStartTime;
         console.log('[FileScanPage] API response received in', apiTime, 'ms');
 
-        let result: any = await response.json();
-        
-        // Transform backend response to match expected format
-        if (useDirectBackend && result) {
-          console.log('[FileScanPage] Transforming backend response:', result);
-          
-          // Backend returns: { verdict, confidence, threat_level, md5, sha1, sha256, scan_time }
-          // Need to transform to match ScanFileOutput format
-          const transformedResult: ScanFileOutput = {
-            status: result.error ? 'error' : 'completed',
-            threatLabel: result.threat_level || result.verdict || 'Unknown',
-            scanDate: Math.floor(Date.now() / 1000),
-            fileInfo: {
-              name: file.name,
-              size: file.size,
-              md5: result.md5,
-              sha1: result.sha1,
-              sha256: result.sha256,
-            },
-            stats: {
-              malicious: result.verdict?.toLowerCase().includes('malicious') ? 1 : 0,
-              suspicious: result.verdict?.toLowerCase().includes('suspicious') ? 1 : 0,
-              harmless: result.verdict?.toLowerCase().includes('clean') || result.verdict?.toLowerCase().includes('benign') ? 1 : 0,
-              undetected: 0,
-              timeout: 0,
-            },
-            results: {
-              'NeuroShield_AI_Model': {
-                category: 'type-unsupported',
-                engine_name: 'NeuroShield_Analysis_Engine',
-                result: `${result.verdict} (${result.confidence}%)`,
-                method: 'machine_learning',
-              }
-            },
-            error: result.error,
-          };
-          
-          result = transformedResult;
-        }
-        
-        const totalTime = Date.now() - startTime;
-        console.log('[FileScanPage] Received result from API:', result.status, result.threatLabel);
-        console.log('[FileScanPage] Total scan time:', totalTime, 'ms');
-
-        setScanResult(result);
+        const result: ScanFileOutput = await response.json();
 
         // Check if scan had an error
         if (!response.ok || result.status === 'error' || result.error) {
