@@ -83,14 +83,35 @@ export default function FileScanPage() {
         
         setScanStatus('scanning');
         
-        console.log('[FileScanPage] Calling API /api/scan/file with input:', {fileName: file.name});
+        // For large files (>4MB), send directly to Render backend to avoid Vercel's 4.5MB limit
+        const fileSizeMB = file.size / 1024 / 1024;
+        const useDirectBackend = fileSizeMB > 4;
+        
+        console.log('[FileScanPage] File size:', fileSizeMB.toFixed(2), 'MB, useDirectBackend:', useDirectBackend);
         const apiStartTime = Date.now();
 
-        const response = await fetch('/api/scan/file', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileDataUri, fileName: file.name }),
-        });
+        let response;
+        if (useDirectBackend) {
+          // Send file directly to Render backend using FormData
+          const backendUrl = process.env.NEXT_PUBLIC_EMBER_API_URL || 'https://neuroshield-backend.onrender.com';
+          console.log('[FileScanPage] Sending to backend:', `${backendUrl}/scan`);
+          
+          const formData = new FormData();
+          formData.append('file', file);
+          
+          response = await fetch(`${backendUrl}/scan`, {
+            method: 'POST',
+            body: formData,
+          });
+        } else {
+          // Use Vercel API route for smaller files
+          console.log('[FileScanPage] Using Vercel API route /api/scan/file');
+          response = await fetch('/api/scan/file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileDataUri, fileName: file.name }),
+          });
+        }
         
         const apiTime = Date.now() - apiStartTime;
         console.log('[FileScanPage] API response received in', apiTime, 'ms');
