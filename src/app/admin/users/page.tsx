@@ -278,29 +278,29 @@ export default function AdminUsersPage() {
                 </div>
               ) : (
                 <ScrollArea className="h-[600px] w-full rounded-md border">
-                  <div className="min-w-full overflow-x-auto">
+                  <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="min-w-[200px]">User</TableHead>
+                          <TableHead className="w-auto max-w-[180px] sm:max-w-none">User</TableHead>
                           <TableHead className="hidden md:table-cell">Status</TableHead>
                           <TableHead className="hidden lg:table-cell">Joined Date</TableHead>
                           <TableHead className="hidden lg:table-cell">Last Login</TableHead>
-                          <TableHead className="text-center w-[60px] sticky right-0 bg-background">Actions</TableHead>
+                          <TableHead className="text-center w-[60px]">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {filteredUsers.map((user) => (
                           <TableRow key={user.id}>
-                            <TableCell className="min-w-[200px]">
-                              <div className="flex items-center gap-3">
-                                <Avatar className="h-10 w-10 border-2 border-primary/50">
+                            <TableCell className="w-auto max-w-[180px] sm:max-w-none">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border-2 border-primary/50 flex-shrink-0">
                                   <AvatarImage src={user.profilePicUrl} alt={user.displayName} />
                                   <AvatarFallback>{user.displayName.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <div className="grid gap-0.5">
-                                  <p className="font-medium text-foreground">{user.displayName}</p>
-                                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                                <div className="grid gap-0.5 min-w-0">
+                                  <p className="font-medium text-foreground text-sm sm:text-base truncate">{user.displayName}</p>
+                                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                                 </div>
                               </div>
                             </TableCell>
@@ -315,10 +315,10 @@ export default function AdminUsersPage() {
                             <TableCell className="hidden lg:table-cell text-muted-foreground">
                               {user.lastLogin ? user.lastLogin.toLocaleString() : 'Never'}
                             </TableCell>
-                            <TableCell className="text-center w-[60px] sticky right-0 bg-background">
+                            <TableCell className="text-center w-[60px]">
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8" disabled={user.id === adminUser?.uid}>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" disabled={user.id === adminUser?.uid}>
                                     <MoreVertical className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
