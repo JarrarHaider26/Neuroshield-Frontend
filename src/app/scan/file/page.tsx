@@ -163,11 +163,12 @@ export default function FileScanPage() {
         setScanStatus('completed');
         // Save the report from the client-side after scan completes
         await saveReport(result, file);
-        // Clear the uploaded file and reset uploader so user can upload a new one
-        setUploadedFile(null);
-        setResetUploader(true);
-        setTimeout(() => setResetUploader(false), 100); // Reset the resetUploader flag
       }
+      
+      // Clear the uploaded file and reset uploader after scan completes (success or error)
+      setUploadedFile(null);
+      setResetUploader(true);
+      setTimeout(() => setResetUploader(false), 100); // Reset the resetUploader flag
     } catch (err: any) {
       console.error('[FileScanPage] File scan error:', err);
       setScanStatus('error');
@@ -180,6 +181,10 @@ export default function FileScanPage() {
       }
       setErrorMessage(detailedError);
       setScanResult(null);
+      // Clear the uploaded file and reset uploader even on error
+      setUploadedFile(null);
+      setResetUploader(true);
+      setTimeout(() => setResetUploader(false), 100); // Reset the resetUploader flag
     }
   };
 
@@ -340,10 +345,10 @@ export default function FileScanPage() {
                   </ul>
                 </div>
               )}
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-3 mt-6">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button className="btn-glow w-full sm:w-auto text-sm sm:text-base" variant="default" disabled={!scanResult || (scanResult.status !== 'completed' && !scanResult.analysisId) || !!scanResult.error}>
+                        <Button className="btn-glow flex-1 sm:flex-none text-sm sm:text-base" variant="default" disabled={!scanResult || (scanResult.status !== 'completed' && !scanResult.analysisId) || !!scanResult.error}>
                             <FileDown className="mr-2 h-4 w-4" /> Download Report
                         </Button>
                     </DropdownMenuTrigger>
@@ -358,6 +363,21 @@ export default function FileScanPage() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <Button 
+                  onClick={() => { 
+                    setScanStatus('idle'); 
+                    setUploadedFile(null); 
+                    setScanResult(null); 
+                    setErrorMessage(null);
+                    setResetUploader(true);
+                    setTimeout(() => setResetUploader(false), 100);
+                  }} 
+                  variant="outline" 
+                  className="flex-1 sm:flex-none text-sm sm:text-base border-primary/30 hover:border-primary hover:bg-primary/5 transition-all duration-200"
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Scan Another File
+                </Button>
               </div>
             </CardContent>
           </Card>
