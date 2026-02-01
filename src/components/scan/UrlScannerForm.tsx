@@ -4,6 +4,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { useEffect } from 'react';
 // Removed useState as loading state will be managed by the parent page
 // import { useState } from 'react'; 
 
@@ -28,9 +29,10 @@ type UrlFormValues = z.infer<typeof urlSchema>;
 interface UrlScannerFormProps {
   onSubmit: (url: string) => void;
   isScanning: boolean; // Added prop to receive scanning state
+  resetForm?: boolean; // Added prop to trigger form reset
 }
 
-export function UrlScannerForm({ onSubmit, isScanning }: UrlScannerFormProps) {
+export function UrlScannerForm({ onSubmit, isScanning, resetForm }: UrlScannerFormProps) {
   // const [isLoading, setIsLoading] = useState(false); // isLoading is now managed by parent
 
   const form = useForm<UrlFormValues>({
@@ -39,6 +41,13 @@ export function UrlScannerForm({ onSubmit, isScanning }: UrlScannerFormProps) {
       url: '',
     },
   });
+
+  // Reset form when resetForm prop changes
+  useEffect(() => {
+    if (resetForm) {
+      form.reset();
+    }
+  }, [resetForm, form]);
 
   async function handleSubmit(values: UrlFormValues) {
     // setIsLoading(true); // Parent will set its own loading state
