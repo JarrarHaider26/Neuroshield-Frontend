@@ -25,6 +25,7 @@ export default function FileScanPage() {
   const [scanResult, setScanResult] = useState<ScanFileOutput | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [resetUploader, setResetUploader] = useState(false);
 
   const saveReport = useCallback(async (result: ScanFileOutput, file: File) => {
     if (!user || !db) {
@@ -162,8 +163,10 @@ export default function FileScanPage() {
         setScanStatus('completed');
         // Save the report from the client-side after scan completes
         await saveReport(result, file);
-        // Clear the uploaded file so user can upload a new one
+        // Clear the uploaded file and reset uploader so user can upload a new one
         setUploadedFile(null);
+        setResetUploader(true);
+        setTimeout(() => setResetUploader(false), 100); // Reset the resetUploader flag
       }
     } catch (err: any) {
       console.error('[FileScanPage] File scan error:', err);
@@ -245,7 +248,7 @@ export default function FileScanPage() {
             <CardDescription className="text-xs sm:text-sm">Drag & drop your file or click to browse. Max file size: 32MB.</CardDescription>
           </CardHeader>
           <CardContent>
-            <FileUploader onFileUpload={handleFileUpload} />
+            <FileUploader onFileUpload={handleFileUpload} resetUploader={resetUploader} />
           </CardContent>
         </Card>
 
