@@ -162,6 +162,8 @@ export default function FileScanPage() {
         setScanStatus('completed');
         // Save the report from the client-side after scan completes
         await saveReport(result, file);
+        // Clear the uploaded file so user can upload a new one
+        setUploadedFile(null);
       }
     } catch (err: any) {
       console.error('[FileScanPage] File scan error:', err);
@@ -353,6 +355,19 @@ export default function FileScanPage() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <Button 
+                  onClick={() => { 
+                    setScanStatus('idle'); 
+                    setUploadedFile(null); 
+                    setScanResult(null); 
+                    setErrorMessage(null); 
+                  }} 
+                  variant="outline" 
+                  className="w-full sm:w-auto text-sm sm:text-base"
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Scan Another File
+                </Button>
               </div>
             </CardContent>
           </Card>
