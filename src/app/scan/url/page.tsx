@@ -25,6 +25,7 @@ export default function UrlScanPage() {
   const [scanResult, setScanResult] = useState<ScanUrlOutput | null>(null);
   const [scannedUrl, setScannedUrl] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [resetForm, setResetForm] = useState(false);
 
   const saveReport = useCallback(async (result: ScanUrlOutput) => {
     if (!user || !db) {
@@ -96,6 +97,10 @@ export default function UrlScanPage() {
         setScanStatus('completed');
         // Save the report from the client-side after scan completes
         await saveReport(result);
+        // Clear the scanned URL and reset form so user can scan a new one
+        setScannedUrl(null);
+        setResetForm(true);
+        setTimeout(() => setResetForm(false), 100); // Reset the resetForm flag
       }
     } catch (err: any) {
       console.error('[UrlScanPage] URL scan error:', err);
@@ -174,7 +179,7 @@ export default function UrlScanPage() {
             <CardDescription className="text-xs sm:text-sm">Provide the full URL (e.g., https://example.com) for analysis.</CardDescription>
           </CardHeader>
           <CardContent>
-            <UrlScannerForm onSubmit={handleUrlSubmit} isScanning={scanStatus === 'scanning'} />
+            <UrlScannerForm onSubmit={handleUrlSubmit} isScanning={scanStatus === 'scanning'} resetForm={resetForm} />
           </CardContent>
         </Card>
 
@@ -237,6 +242,21 @@ export default function UrlScanPage() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <Button 
+                  onClick={() => { 
+                    setScanStatus('idle'); 
+                    setScannedUrl(null); 
+                    setScanResult(null); 
+                    setErrorMessage(null);
+                    setResetForm(true);
+                    setTimeout(() => setResetForm(false), 100);
+                  }} 
+                  variant="outline" 
+                  className="w-full sm:w-auto text-sm sm:text-base"
+                >
+                  <Globe className="mr-2 h-4 w-4" />
+                  Scan Another URL
+                </Button>
               </div>
             </CardContent>
           </Card>
