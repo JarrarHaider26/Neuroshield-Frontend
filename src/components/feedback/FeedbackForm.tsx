@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Loader2, Send, CheckCircle } from 'lucide-react';
 
 export function FeedbackForm() {
-  const [state, handleSubmit] = useForm("mnndwdbe");
+  const [state, handleSubmit, reset] = useForm("mnndwdbe");
+
+  const handleNewFeedback = () => {
+    reset();
+  };
 
   if (state.succeeded) {
     return (
@@ -27,6 +31,12 @@ export function FeedbackForm() {
             Thank you for your feedback. We've received your message and will review it shortly.
           </p>
         </CardContent>
+        <CardFooter>
+          <Button onClick={handleNewFeedback} className="w-full btn-glow">
+            <Send className="mr-2 h-4 w-4" />
+            Send Another Feedback
+          </Button>
+        </CardFooter>
       </Card>
     );
   }
