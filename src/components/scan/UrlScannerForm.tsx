@@ -83,7 +83,7 @@ export function UrlScannerForm({ onSubmit, isScanning, resetForm }: UrlScannerFo
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full btn-glow" disabled={isScanning}>
+        <Button type="submit" className="w-full btn-glow" disabled={isScanning || !form.formState.isValid}>
           {isScanning ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
