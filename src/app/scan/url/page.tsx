@@ -242,21 +242,6 @@ export default function UrlScanPage() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <Button 
-                  onClick={() => { 
-                    setScanStatus('idle'); 
-                    setScannedUrl(null); 
-                    setScanResult(null); 
-                    setErrorMessage(null);
-                    setResetForm(true);
-                    setTimeout(() => setResetForm(false), 100);
-                  }} 
-                  variant="outline" 
-                  className="w-full sm:w-auto text-sm sm:text-base"
-                >
-                  <Globe className="mr-2 h-4 w-4" />
-                  Scan Another URL
-                </Button>
               </div>
             </CardContent>
           </Card>
