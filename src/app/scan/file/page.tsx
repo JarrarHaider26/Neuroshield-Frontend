@@ -248,7 +248,7 @@ export default function FileScanPage() {
             <CardDescription className="text-xs sm:text-sm">Drag & drop your file or click to browse. Max file size: 32MB.</CardDescription>
           </CardHeader>
           <CardContent>
-            <FileUploader onFileUpload={handleFileUpload} resetUploader={resetUploader} />
+            <FileUploader onFileUpload={handleFileUpload} resetUploader={resetUploader} isScanning={scanStatus === 'scanning'} />
           </CardContent>
         </Card>
 
