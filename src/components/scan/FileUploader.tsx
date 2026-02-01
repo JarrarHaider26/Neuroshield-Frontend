@@ -12,7 +12,6 @@ interface FileUploaderProps {
   maxSize?: number; // in bytes
   accept?: Record<string, string[]>; // e.g. { 'application/pdf': ['.pdf'] }
   resetUploader?: boolean; // Add prop to reset the uploader
-  isScanning?: boolean; // Add prop to hide file during scanning
 }
 
 export function FileUploader({ 
@@ -23,8 +22,7 @@ export function FileUploader({
     'application/x-msdownload': ['.exe', '.dll', '.sys', '.scr', '.com'],
     'application/octet-stream': ['.exe', '.dll', '.sys', '.scr', '.com'],
    },
-  resetUploader = false,
-  isScanning = false
+  resetUploader = false
 }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -120,7 +118,7 @@ export function FileUploader({
         </div>
       )}
 
-      {file && !isProcessingClientSide && !isScanning && (
+      {file && !isProcessingClientSide && (
         <div className="p-4 border rounded-lg bg-card flex items-center justify-between">
           <div className="flex items-center gap-3">
             <FileText className="h-8 w-8 text-primary" />
@@ -149,7 +147,7 @@ export function FileUploader({
         </div>
       )}
 
-      {file && !isProcessingClientSide && !isScanning && (
+      {file && !isProcessingClientSide && (
         <Button onClick={handleScan} className="w-full btn-glow" disabled={isProcessingClientSide}>
           {isProcessingClientSide ? 'Processing...' : 'Initiate Scan'}
         </Button>
