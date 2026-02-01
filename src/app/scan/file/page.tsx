@@ -372,8 +372,8 @@ export default function FileScanPage() {
                     setResetUploader(true);
                     setTimeout(() => setResetUploader(false), 100);
                   }} 
-                  variant="outline" 
-                  className="flex-1 sm:flex-none text-sm sm:text-base border-primary/30 hover:border-primary hover:bg-primary/5 transition-all duration-200"
+                  className="btn-glow flex-1 sm:flex-none text-sm sm:text-base"
+                  variant="default"
                 >
                   <ShieldCheck className="mr-2 h-4 w-4" />
                   Scan Another File
