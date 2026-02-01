@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, FileText, XCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ interface FileUploaderProps {
   onFileUpload: (file: File) => void;
   maxSize?: number; // in bytes
   accept?: Record<string, string[]>; // e.g. { 'application/pdf': ['.pdf'] }
+  resetUploader?: boolean; // Add prop to reset the uploader
 }
 
 export function FileUploader({ 
@@ -20,7 +21,8 @@ export function FileUploader({
     'application/vnd.microsoft.portable-executable': ['.exe', '.dll', '.sys', '.scr', '.com'],
     'application/x-msdownload': ['.exe', '.dll', '.sys', '.scr', '.com'],
     'application/octet-stream': ['.exe', '.dll', '.sys', '.scr', '.com'],
-   }
+   },
+  resetUploader = false
 }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
