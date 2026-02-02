@@ -100,41 +100,100 @@ export default function DashboardPage() {
               <CardDescription className="text-xs sm:text-sm">Current operational status of NeuroShield services.</CardDescription>
             </CardHeader>
             <CardContent className="relative">
-              <ul className="space-y-3 sm:space-y-4">
-                <motion.li 
-                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  transition={{ duration: 0.2 }}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Status Card 1 */}
+                <motion.div
+                  className="relative group"
+                  whileHover={{ 
+                    scale: 1.05,
+                    rotateY: 5,
+                    rotateX: -5,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{ perspective: 1000 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base">NeuroShield Intelligence:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    Operational
-                  </span>
-                </motion.li>
-                <motion.li 
-                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  transition={{ duration: 0.2 }}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-400/5 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-100" />
+                  <div className="relative p-4 sm:p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-green-500/30 backdrop-blur-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.div 
+                        className="relative"
+                        animate={{ 
+                          boxShadow: ['0 0 10px rgba(74, 222, 128, 0.5)', '0 0 20px rgba(74, 222, 128, 0.8)', '0 0 10px rgba(74, 222, 128, 0.5)']
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        <div className="w-3 h-3 rounded-full bg-green-400" />
+                        <div className="absolute inset-0 w-3 h-3 rounded-full bg-green-400 animate-ping opacity-75" />
+                      </motion.div>
+                      <span className="text-green-400 font-bold text-lg">Operational</span>
+                    </div>
+                    <p className="text-foreground font-medium text-sm">NeuroShield Intelligence</p>
+                    <p className="text-muted-foreground text-xs mt-1">Core AI engine active</p>
+                  </div>
+                </motion.div>
+
+                {/* Status Card 2 */}
+                <motion.div
+                  className="relative group"
+                  whileHover={{ 
+                    scale: 1.05,
+                    rotateY: 5,
+                    rotateX: -5,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{ perspective: 1000 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base">AI Analysis:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    Optimal
-                  </span>
-                </motion.li>
-                <motion.li 
-                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  transition={{ duration: 0.2 }}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-400/5 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-100" />
+                  <div className="relative p-4 sm:p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-green-500/30 backdrop-blur-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.div 
+                        className="relative"
+                        animate={{ 
+                          boxShadow: ['0 0 10px rgba(74, 222, 128, 0.5)', '0 0 20px rgba(74, 222, 128, 0.8)', '0 0 10px rgba(74, 222, 128, 0.5)']
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+                      >
+                        <div className="w-3 h-3 rounded-full bg-green-400" />
+                        <div className="absolute inset-0 w-3 h-3 rounded-full bg-green-400 animate-ping opacity-75" />
+                      </motion.div>
+                      <span className="text-green-400 font-bold text-lg">Optimal</span>
+                    </div>
+                    <p className="text-foreground font-medium text-sm">AI Analysis</p>
+                    <p className="text-muted-foreground text-xs mt-1">Processing at full capacity</p>
+                  </div>
+                </motion.div>
+
+                {/* Status Card 3 */}
+                <motion.div
+                  className="relative group"
+                  whileHover={{ 
+                    scale: 1.05,
+                    rotateY: 5,
+                    rotateX: -5,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{ perspective: 1000 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base">Report Database:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    Connected
-                  </span>
-                </motion.li>
-              </ul>
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-400/5 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-100" />
+                  <div className="relative p-4 sm:p-5 rounded-xl bg-gradient-to-br from-muted/40 to-muted/20 border border-green-500/30 backdrop-blur-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.div 
+                        className="relative"
+                        animate={{ 
+                          boxShadow: ['0 0 10px rgba(74, 222, 128, 0.5)', '0 0 20px rgba(74, 222, 128, 0.8)', '0 0 10px rgba(74, 222, 128, 0.5)']
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
+                      >
+                        <div className="w-3 h-3 rounded-full bg-green-400" />
+                        <div className="absolute inset-0 w-3 h-3 rounded-full bg-green-400 animate-ping opacity-75" />
+                      </motion.div>
+                      <span className="text-green-400 font-bold text-lg">Connected</span>
+                    </div>
+                    <p className="text-foreground font-medium text-sm">Report Database</p>
+                    <p className="text-muted-foreground text-xs mt-1">Secure connection established</p>
+                  </div>
+                </motion.div>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
