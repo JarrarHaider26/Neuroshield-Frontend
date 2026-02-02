@@ -86,7 +86,7 @@ export function SignupForm() {
                 <FormItem>
                   <FormLabel className="text-muted-foreground">Callsign</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Ghost" {...field} className="bg-input/50 border-primary/30 focus:border-primary focus:ring-primary" disabled={isLoading} />
+                    <Input placeholder="Enter your name" {...field} className="bg-input/50 border-primary/30 focus:border-primary focus:ring-primary" disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
