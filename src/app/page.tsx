@@ -102,34 +102,34 @@ export default function DashboardPage() {
             <CardContent className="relative">
               <ul className="space-y-3 sm:space-y-4">
                 <motion.li 
-                  className="flex flex-col sm:flex-row sm:items-center gap-2 p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
+                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">NeuroShield Intelligence:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
+                  <span className="text-foreground font-medium text-sm sm:text-base">NeuroShield Intelligence:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Operational
                   </span>
                 </motion.li>
                 <motion.li 
-                  className="flex flex-col sm:flex-row sm:items-center gap-2 p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
+                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">AI Analysis:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
+                  <span className="text-foreground font-medium text-sm sm:text-base">AI Analysis:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Optimal
                   </span>
                 </motion.li>
                 <motion.li 
-                  className="flex flex-col sm:flex-row sm:items-center gap-2 p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
+                  className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-muted/20 border border-border/30"
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">Report Database:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
+                  <span className="text-foreground font-medium text-sm sm:text-base">Report Database:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Connected
                   </span>
