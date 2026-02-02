@@ -106,8 +106,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base flex-1 min-w-0">NeuroShield Intelligence:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0">
+                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">NeuroShield Intelligence:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Operational
                   </span>
@@ -117,8 +117,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base flex-1 min-w-0">AI Analysis:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0">
+                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">AI Analysis:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Optimal
                   </span>
@@ -128,8 +128,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.02, x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-foreground font-medium text-sm sm:text-base flex-1 min-w-0">Report Database:</span>
-                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0">
+                  <span className="text-foreground font-medium text-sm sm:text-base sm:w-48 min-w-0">Report Database:</span>
+                  <span className="text-green-400 font-semibold flex items-center gap-2 text-sm sm:text-base shrink-0 sm:ml-auto">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                     Connected
                   </span>
